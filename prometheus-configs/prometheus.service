@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStart=/prometheus-2.9.2.linux-amd64/prometheus \
+    --config.file /prometheus-2.9.2.linux-amd64/prometheus_cb.yml
+
+[Install]
+WantedBy=multi-user.target

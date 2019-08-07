@@ -1,0 +1,18 @@
+[
+    {
+        "labels": {
+            "cluster": "Cluster 37"
+        },
+        "targets": [
+            "localhost:9422"
+        ]
+    },
+    {
+        "labels": {
+            "cluster": "Orphan VM"
+        },
+        "targets": [
+            "localhost:25903"
+        ]
+    }
+]
