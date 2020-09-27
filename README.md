@@ -15,6 +15,8 @@ Each directory contains altered files, source code and methodology followed for 
 * __custom-dashboards:__ JSON file for creating custom dashboard metrics with node level stats as well being captured.
 * __rest-service:__  HTTP Server that adds/remove prometheus targets & start/stop couchbase-exporter processes. This server is the basic idea behind the automation and synchronization amongst different tools in this monitoring solution.
 * __prometheus-analysis:__  Configuration file changes & targets.json files are provided. Plus, small code snippet to create a Prometheus service and setting up `mesh` cluster between two AlertManager instances.
+* __couchbase-exporter-analysis:__ It contains necessary code files to add a new kind of metrics based on `/indexes` endpoints for building a new version of couchbase-exporter instance from the original one. Please, incorporate the existing files with current `couchbase-exporter` by _totvslabs_ just to get started working with the couchbase-exporter building process.
+* __predictive-analytics-and-maintenance:__ This predictive analytics projects forecast system states for the near future and do outlier analysis of the already made forecast data. Also, sanity checks to keep the model performance with the advent of new data are made as well.
 
 ## Architecture Diagrams
 
