@@ -1,11 +1,28 @@
-# Create functions as utility for ReST HTTP server.
+# Contains functions as utility for ReST HTTP server.
+
+# subprocess package for moving the command to background execution.
 import subprocess, random
+# imports for making ReST to Couchbase endpoints.
 import requests
 import json
 from requests.auth import HTTPBasicAuth
 
-# finding cluster name & feeding into the targets.json file for labels of prometheus
+
 def clust_name(hostname,username,password):
+    '''Finding cluster name & feeding into the targets.json file for labels of prometheus.
+    
+    In case no cluster name is found populating 'Orphan VM' value. ReST endpoint used 'pools/default'.
+    
+    Parameters
+    ----------
+    hostname : str
+        The hostname of the Couchbase VM.
+    username : str
+        The username of that given Couchbase VM.
+    password : str
+        The password of that given Couchbase VM.
+    '''
+    
     port='8091'
     URL='http://'+hostname+':'+port
 
@@ -29,8 +46,18 @@ def clust_name(hostname,username,password):
     except requests.exceptions.Timeout as errt:
         print (hostname + " - Timeout Error:",errt)
 
-# Each VM for exporting stats by couchbase-exporter requires it's own specific port number.
+
 def get_empty_port():
+    '''Finding and returning an empty port-number for starting couchbase-exporter process.
+    
+    Each VM for exporting stats by couchbase-exporter requires it's own specific port number.
+
+    Returns
+    -------
+    port_no : int
+        The empty port number returned for CB-Exporter to spin its instance.
+    '''
+
     # Assumption empty is available in the given VM.
     port_no = -1
     mssg_dgst = '-1 Imaginary Port'
@@ -44,8 +71,21 @@ def get_empty_port():
 
 import json
 
-# write VM related information into the reference file.
+
 def write_util(hostname,username, password, port_no):
+    '''write VM related information into the reference file.
+    
+    Parameters
+    ----------
+    hostname : str
+        The hostname of the Couchbase VM.
+    username : str
+        The username of that given Couchbase VM.
+    password : str
+        The password of that given Couchbase VM.
+    port_no : int
+        The port-no on which CB-Exporter instance is running.
+    '''
     with open("targets.json", "r") as read_file:
         data=json.load(read_file)
     str_val = username+","+password+","+str(port_no)
@@ -54,22 +94,28 @@ def write_util(hostname,username, password, port_no):
     with open("targets.json", "w+") as write_file:
         data=json.dump(data,write_file, indent=4, separators=(',', ': '))
 
-# return information related to particular host.
+
 def get_util(hostname):
+    '''return information related to particular hostname passed as string argument.'''
+    
     with open("targets.json", "r") as read_file:
         data=json.load(read_file)
     if hostname in data:
         return data[hostname]
     return "Key Not Present. Please Check."
 
-# return all information of reference file.
+
 def get_view():
+    '''returns all information of reference targets.json file under consideration. '''
+    
     with open("targets.json", "r") as read_file:
         data=json.load(read_file)
     return data
 
-# Delete given Key entry from reference file.
+
 def del_util(hostname):
+    '''Delete given Key entry from reference targets.json file.'''
+    
     with open("targets.json", "r") as read_file:
         data=json.load(read_file)
     str_val = ""
@@ -85,8 +131,10 @@ def del_util(hostname):
         json.dump(data,write_file, indent=4, separators=(',', ': '))
     return str_val, port_no
 
-# Start the couchbase exporter with executing the command.
+
 def cbexport_start(hostname):
+    '''Start the couchbase exporter with executing the command.'''
+    
     with open("targets.json", "r") as read_file:
         data=json.load(read_file)
     if hostname in data:
@@ -104,8 +152,10 @@ def cbexport_start(hostname):
 
 import re
 
-# Delete or end the couchbase exporter process.
+
 def cbexport_del(port_no):
+    '''Delete or end the couchbase exporter process.'''
+
     # Need to be 'root' to know the process id information.
     port_command = 'netstat -nlp | grep ":'+str(port_no)+'"'
     p = subprocess.Popen(port_command, stdout=subprocess.PIPE, shell=True)
@@ -125,8 +175,10 @@ def cbexport_del(port_no):
     else:
         print("Port number not in use.")
 
-# Write into json file of prometheus running server. For dynamic detection by Node Exporter.
+
 def write_targets(port_no,hostname,username,password):
+    '''Write into json file of prometheus running server. For dynamic detection by Node Exporter.'''
+    
     targ_str = "localhost:"+str(port_no)
     # These two entries can be fetched from global repository
     # get this data with another rest query to server
@@ -140,8 +192,10 @@ def write_targets(port_no,hostname,username,password):
     with open('../prometheus-2.9.2.linux-amd64/targets.json','w+') as write_file:
         data=json.dump(data,write_file, indent=4, separators=(',', ': '))
 
-# Delete value from json file of prometheus running server. For dynamic detection by Node Exporter.
+
 def del_targets(port_no):
+    '''Delete value from json file of prometheus running server. For dynamic detection by Node Exporter.'''
+    
     with open('../prometheus-2.9.2.linux-amd64/targets.json','r') as read_file:
         data = json.load(read_file)
     i=0

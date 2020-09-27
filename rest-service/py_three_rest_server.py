@@ -1,17 +1,24 @@
+# Setting basic functionality HTTP Server and Request Handler in Python3.
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 from utils import *
 
-# functional design opted. Hence, direct files imports opted out.
+# Functional design is opted. Hence, direct files imports opted out.
 # open json file and give it to data variable as a dictionary
 # with open("targets.json") as data_file:
 #     data = json.load(data_file)
 
 
-# Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
-    # sets basic headers for the server
+    '''Sets basic headers for the HTTP server.
+    
+    '''
+    
     def _set_headers(self):
+        '''Setting up the header response upon connection establishment.
+        
+        '''
+
         self.send_response(200)
         self.send_header('Content-type','text/json')
         # reads the length of the Headers
@@ -21,12 +28,14 @@ class ServiceHandler(BaseHTTPRequestHandler):
         data_strm = str(content).strip('b\'')
         self.end_headers()
         return data_strm
+    
         
-
-    # VIEW Method Definition
-    # Sample Curl Query: curl -X VIEW --data "tild23.pld.ai" server-url:port-no
-    # Uses VIEW Method to show the value for a given Key from the cb-exporter's targets.json file.
     def do_VIEW(self):
+        '''Uses VIEW Method to show the value for a given Key from the cb-exporter's targets.json file.
+      
+        Sample Curl Query: curl -X VIEW --data "tild23.pld.ai" server-url:port-no  
+        ''' 
+    
         # defining all the headers.
         display = {}
         data_strm = self._set_headers()
@@ -37,11 +46,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
         # prints values from given key as input.
         self.wfile.write(json.dumps(display).encode())
     
-
-    # GET Method Definition
-    # Sample Curl Query: curl -X GET server-url:port-no
-    # Uses GET Method to show all the keys and their respective values from the cb-exporter's targets.json file.
+    
     def do_GET(self):
+        '''Uses GET Method to show all the keys and their respective values from the cb-exporter's targets.json file.
+        
+        Sample Curl Query: curl -X GET server-url:port-no  
+        '''
+    
         # defining all the headers.
         self.send_response(200)
         self.send_header('Content-type','text/json')
@@ -50,10 +61,12 @@ class ServiceHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(get_view()).encode())
 
 
-    # POST Method Definition
-    # Sample Curl Query: curl -X POST --data "Hostname,UserName,Password" server-url:port-no
-    # Uses POST Method to get empty port-no to start cb-exporter process & update targets.json for both our HTTP server and Prometheus.
     def do_POST(self):
+        '''Uses POST Method to get empty port-no to start cb-exporter process & update targets.json for both our HTTP server and Prometheus.
+        
+        Sample Curl Query: curl -X POST --data "Hostname,UserName,Password" server-url:port-no
+        '''
+        
         data_strm = self._set_headers()
         data_strm_list = data_strm.split(',')
         # get free port number
@@ -69,11 +82,12 @@ class ServiceHandler(BaseHTTPRequestHandler):
         self.wfile.write(bytes(eff_mssg,'utf-8'))
 
 
-
-    # DELETE Method Definition
-    # Sample Curl Query: curl -X DELETE --data "Hostname" server-url:port-no
-    # Uses DELETE Method to kill a cb-exporter process baed on port-no & update targets.json for both our HTTP server and Prometheus.
     def do_DELETE(self):
+        '''Uses DELETE Method to kill a cb-exporter process baed on port-no & update targets.json for both our HTTP server and Prometheus.
+        
+        Sample Curl Query: curl -X DELETE --data "Hostname" server-url:port-no
+        '''
+        
         # receive hostname value as key
         data_strm = self._set_headers()
         # delete value from cb-exporter's reference file.
