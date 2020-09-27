@@ -1,26 +1,35 @@
-# Dissection of 'Couchbase Monitoring Integration with Prometheus and Grafana'
+## Dissection of 'Couchbase Monitoring Integration with Prometheus and Grafana'
 
-### Couchbase Database Server -> Couchbase-Exporter -> Prometheus -> Grafana, sequence highlights the flow of metric data.  
+This repository contains implementation of the concepts explained in the presentation used in the `Couchbase Connect.ONLINE` session `Automating Couchbase Monitoring`. Also, it covers all the concepts presented in the `Hackernoon` article `Dissection of 'Couchbase Monitoring Integration with Prometheus and Grafana'`.  
 
-#### This repository contains an in-depth discussion on prometheus based alerting and dashboarding tool that displays time-series data on Grafana with metrics that are exported from couchbase server's ReST endpoints with the help of couchbase-exporter tool.  
+#### An in-depth discussion on Prometheus based alerting and dashboarding tool that displays time-series data on Grafana with metrics that are exported from couchbase server's ReST endpoints with the help of Couchbase-Exporter tool. Below, we state the sequence order in which the metric data flows.  
 
-This repository elaborates upon components explored for this alerting tool. Like dashboarding, alerting, building custom cb-exporter, automating instance addition to prometheus targets etc.
+#### Couchbase Database Server &#8594; Couchbase-Exporter &#8594; Prometheus &#8594; Grafana
 
-## Description
+This repository elaborates upon components explored for this monitoring & alerting tool. Like dashboarding, alerting, building custom cb-exporter, automating instance addition to prometheus targets, doing predictive analytics for machine failure etc.
 
-Each directory contains altered files, source code and methodology followed for that component from the mentioned couchbase article. Also, alternate paths and ideas are mentioned that weren't pursued as per time constraints.
+## Directory Structure Description
 
+Each directory contains altered files, source code and methodology followed for that component from the ![Hackernoon couchbase article](https://hackernoon.com/dissecting-the-couchbase-monitoring-integration-with-prometheus-and-grafana-ge1v6263t). Also, alternate paths and ideas are stated in abstract manner with generic implementations that weren't pursued in the case-study as per the time constraints.
 
-* __custom-dashboards:__ JSON file for creating custom dashboard with node level stats also in `dashboard.json` file.
-* __rest-service:__  HTTP Server that adds/remove prometheus targets & start/stop couchbase-exporter processes.
-* __prometheus-analysis:__  Configuration file changes & targets.json files present. Plus, small code snippet to create a Prometheus service.
+* __custom-dashboards:__ JSON file for creating custom dashboard metrics with node level stats as well being captured.
+* __rest-service:__  HTTP Server that adds/remove prometheus targets & start/stop couchbase-exporter processes. This server is the basic idea behind the automation and synchronization amongst different tools in this monitoring solution.
+* __prometheus-analysis:__  Configuration file changes & targets.json files are provided. Plus, small code snippet to create a Prometheus service and setting up `mesh` cluster between two AlertManager instances.
 
 ## Architecture Diagrams
 
-#### The basic Out-Of-The-Box integration can be viewed from the below specified architecture diagram as specified in the couchbase blog.
+Below we state the automation architecture diagram for the monitoring solution to synchronize these different tools under consideration. After, that we provide the high availability architecture under which this monitoring solution should be deployed.
 
-![Architecture Diagram Of Couchbase](arch_dia_couch.png)
 
-#### A high availability completely scalable solution with full recovery mechanism solution is specified below.
+<p align="center">
+  <img src="assets/arch_dia_couch.png" width="850" />
 
-![High Availability Of Prometheus Implementation](prom_ha.png)
+  <b>Figure 1:</b> Automation architecture for adding & removing a Couchbase instances from the monitoring & alerting solution in place.
+</p>
+
+
+<p align="center">
+  <img src="assets/prom_ha.png" width="850" />
+
+  <b>Figure 2:</b> High availability scalable solution that runs identical monitoring instances to provide 24x7 alerting capabilities.
+</p>
