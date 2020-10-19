@@ -1,6 +1,6 @@
 ## Dissection of 'Couchbase Monitoring Integration with Prometheus and Grafana'
 
-This repository contains implementation of the concepts explained in the presentation used in the `Couchbase Connect.ONLINE` session `Automating Couchbase Monitoring`. Also, it covers all the concepts presented in the `Hackernoon` article `Dissection of 'Couchbase Monitoring Integration with Prometheus and Grafana'`.  
+This repository contains implementation of the concepts explained in the presentation used in the `Couchbase Connect.ONLINE 2020` session `Automating Couchbase Monitoring`. Also, it covers all the concepts presented in the `Hackernoon` article `Dissection of 'Couchbase Monitoring Integration with Prometheus and Grafana'`. The presentation used for the session is attached in the github repository for reference as well, ![refer link](Couchbase-Prometheus-Grafana-Integration-Presentation.pdf). You can also login to the Couchbase Connect.ONLINE portal for the video session regarding the same.
 
 #### An in-depth discussion on Prometheus based alerting and dashboarding tool that displays time-series data on Grafana with metrics that are exported from couchbase server's ReST endpoints with the help of Couchbase-Exporter tool. Below, we state the sequence order in which the metric data flows.  
 
